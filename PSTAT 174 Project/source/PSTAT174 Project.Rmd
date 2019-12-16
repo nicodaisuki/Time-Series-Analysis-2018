@@ -1,0 +1,46 @@
+---
+title: "PSTAT174 Project"
+author: "Jia Ma"
+date: "November 15, 2018"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+install.packages("ggplot2")
+library(astsa)
+library(tseries)
+library(MASS)
+library(forecast)
+library(TSA)
+library(GeneCycle)
+library(ggplot2)
+```
+
+#Plot original data
+```{r}
+install.packages("readxl")
+library("readxl")
+data = read_excel (file.choose()) 
+data1 = ts(data[,2],frequency=12) #data1 is {Yt}
+plot(data1,xlab="Time",ylab="Thousands of Passengers",main="Monthly total international airline passengers in thousands")
+#From the graph we notice a upward trend and seasonality 
+```
+
+#Seasonal plot
+```{r pressure, echo=FALSE}
+x = window(data1, start(c(1949,1),end=c(1960,12)))
+ggseasonplot(x)
+#From the seasonal plot, we can tell that there are usually more people who fly internationally in the months of June and July. There are not that many people who fly internationally in October. This makes sense since summer break is in June and July. 
+#We need a more accurate plot to prove the existence of an upward trend and seasonality. We will use a decomposition model 
+```
+
+#Decomposition Plot
+```{r pressure, echo=FALSE}
+decom = decompose(data1)
+autoplot(decom,xlab="Time in years")
+#In the seasonal part of the plot, we can clearly see that there is one high spike and one low spike every year. The trend part also tells us that it is an upward trend. This concludes that the data is not stationary. We need transformations and differencing in order to make the data stationary. 
+```
